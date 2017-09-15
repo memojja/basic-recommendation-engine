@@ -124,11 +124,9 @@ public class App implements Serializable
 		ratingsDF.show();
 
 
-		/**
-		 * how the top 10 most-active users and how many times they rated
-		 // a movie
-		 *
-		 */
+
+//		 how the top 10 most-active users and how many times they rated a movie
+
 		DataFrame top10MostActive = sqlContext.sql("SELECT ratings.user, count(*) as ct from ratings group by ratings.user order by ct desc limit 10");
 
 		for(Row row : top10MostActive.collectAsList()){
@@ -145,8 +143,6 @@ public class App implements Serializable
 
 
 		//Prediction use cases
-
-
 
 		JavaRDD<Rating>[] ratingSplits = ratingRDD.randomSplit(new double[] { 0.8, 0.2 });
 
@@ -205,7 +201,7 @@ public class App implements Serializable
 					"|| Predicted Rating : " + k._2._2);
 		});
 
-		//Step 7 ) Find false positives
+//		 Find false positives
 
 		JavaPairRDD<UserProductTuple, Tuple2<Double,Double>> falsePositives =  testAndPredictionsJoinedRDD.filter(
 				k -> k._2._1 <= 1 && k._2._2 >=4
@@ -215,7 +211,7 @@ public class App implements Serializable
 		System.out.println("False positives count : " + falsePositives.count());
 
 
-//Step 8 ) Find absolute differences between the predicted and actual targets.
+// Find absolute differences between the predicted and actual targets.
 
 		JavaDoubleRDD meanAbsoluteError = testAndPredictionsJoinedRDD.mapToDouble(
 				v1 -> Math.abs(v1._2._1 - v1._2._2));
